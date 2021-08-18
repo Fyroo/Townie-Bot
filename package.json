@@ -4,23 +4,17 @@
   "description": "discord bot",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
+    "req": "nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "townie"
+    "url": "https://github.com/Fyroo/Townie.git"
   },
   "author": "Moutaa Chaoui & Ayoub Jebali",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.5.0",
-    "@discordjs/opus": "^0.6.0",
-    "discord.js": "^13.1.0",
-    "erlpack": "^0.1.3",
-    "ffmpeg-static": "^4.4.0",
-    "node-fetch": "^2.6.1",
-    "opusscript": "^0.0.8",
-    "tweetnacl": "^1.0.3",
-    "ytdl-core": "^4.9.1"
+    "discord.js": "^13.1.0"
   }
 }
