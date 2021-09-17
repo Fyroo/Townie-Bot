@@ -1,4 +1,4 @@
-const { Client,  Intents, MessageReaction, ReactionCollector, Interaction } = require('discord.js');
+const { Client,  Intents, MessageReaction, ReactionCollector, Interaction, ButtonInteraction } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, ] });
 const { token } = require('./config.json');
 const { MessageActionRow, MessageButton } = require('discord.js');
@@ -12,7 +12,7 @@ client.on('message', async message => {
 	if (message.author.bot) return;
     A = '0';
 
-	if (message.content.match('play')) {
+	if (message.content.match('play'))  {
 		const row = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
@@ -22,11 +22,30 @@ client.on('message', async message => {
 			);
 
 		await message.reply({ content: 'Current players:', A , components: [row] });
-		if(interaction.isButton()){
-			console.log(interaction);
-			interaction.reply({ content: `${interaction.user.tag} joined`});
-		}
+		
+		client.on('interactionCreate', interaction => {
+			if(interaction.isButton()){
+				console.log(interaction.user.tag);
+				interaction.reply({ content: `${interaction.user.tag} joined`});
+				
+			}
+		});           
+
+
+
+
+		                                                                     //interaction Collector not working ↓↓↓↓↓
+		// const collector = message.channel.createMessageComponentCollector({max: 1});
+		// collector.on ('end' , (interaction) => {
+		// 	console.log(interaction.user.tag);
+		// })
+
 	}
+
+
+
+
+	                                                                         // scrap code ↓↓↓↓↓
 });
 // client.on('message', async message =>{
 
