@@ -1,8 +1,13 @@
-const { Client,  Intents, MessageReaction, ReactionCollector, Interaction, ButtonInteraction } = require('discord.js');
+const { Client,  Intents, MessageReaction, ReactionCollector, Interaction } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, ] });
 const { token } = require('./config.json');
 const { MessageActionRow, MessageButton } = require('discord.js');
-
+class playerProfile {
+	constructor(name, role) {
+	  this.name = name;
+	  this.role = role;
+	}
+  }
 function checkExistingplayers(players, UserId){
 	
 	let exist = false ;
@@ -24,7 +29,6 @@ client.once('ready', () => {
 
 client.on('message', async message => {
 	if (message.author.bot) return;
-    A = '0';
 	let timeStop=false;
 	if (message.content.match('play'))  {
 		const row = new MessageActionRow()
@@ -35,13 +39,14 @@ client.on('message', async message => {
 					.setStyle('PRIMARY'),
 			);
 
-		await message.reply({ content: 'Current players:', A , components: [row] });
+		await message.reply({ content: 'Current players:',  components: [row] });
 		let players = [];
 		
 		client.on('interactionCreate', interaction => {
 			if(interaction.isButton()){
 				if (!checkExistingplayers(players,interaction.user.id))
 				{
+					let player1 = new playerProfile(interaction.user.tag,'test');
 					addPlayer(players,interaction.user.id);
 				console.log(players);
 				console.log(interaction.user.tag);
@@ -55,7 +60,7 @@ client.on('message', async message => {
 				
 				
 			}
-		});           
+		});                     
 
 
 
