@@ -7,7 +7,8 @@ class playerProfile {
 	  this.name = name;
 	  this.role = role;
 	}
-  }
+}
+
 function checkExistingplayers(players, UserId){
 	
 	let exist = false ;
@@ -19,31 +20,53 @@ function checkExistingplayers(players, UserId){
 		}
 	}
 	return exist ;
-	}
+}
+
 function addPlayer(players,UserID){
 	players.push(UserID);
 }
+
+function time(time){
+	timer = false;
+	setTimeout(function() {
+		timer = true;
+		return console.log(time,'seconds have passed');
+	}, time*1000);
+	
+}
+
+
 client.once('ready', () => {
 	console.log('Ready!');
 });
+ 
+
 
 client.on('message', async message => {
 	if (message.author.bot) return;
-	let timeStop=false;
+
 	if (message.content.match('play'))  {
+		
 		const row = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
 					.setCustomId('primary')
 					.setLabel('Join')
-					.setStyle('PRIMARY'),
+					.setStyle('PRIMARY')
+					.setDisabled(false),
 			);
-
-		await message.reply({ content: 'Current players:',  components: [row] });
-		let players = [];
+let msg = message.reply({ content: 'Current players:',  components: [row] });
+		await msg; 
 		
+		let players = [];
+        time(10);//seconds
 		client.on('interactionCreate', interaction => {
-			if(interaction.isButton()){
+			if (timer) {
+				// message.editreply('balls');
+				return interaction.reply('time over');
+		}
+			else if(interaction.isButton()){
+				
 				if (!checkExistingplayers(players,interaction.user.id))
 				{
 					let player1 = new playerProfile(interaction.user.tag,'test');
@@ -53,55 +76,11 @@ client.on('message', async message => {
 				interaction.reply({ content: `${interaction.user.tag} joined`});
 				}else{
 					interaction.reply({ content: `${interaction.user.tag} already joined you can not join twice`});
-				}
-				
-
-				
-				
-				
+				}		
 			}
-		});                     
-
-
-
-
-		                                                                     //interaction Collector not working ↓↓↓↓↓
-		// const collector = message.channel.createMessageComponentCollector({max: 1});
-		// collector.on ('end' , (interaction) => {
-		// 	console.log(interaction.user.tag);
-		// })
-
+		});  
+                  
 	}
 
-
-
-
-	                                                                         // scrap code ↓↓↓↓↓
 });
-// client.on('message', async message =>{
-
-//     if (message.author.bot) return;
-//     if(message.content.match('kill')){   
-//         process.exit(1)}
-//     if (message.content.match('play')){
-//         message.channel.send("a").then(async msg => {
-//             msg.react('👍');
-//             const filter = (reaction, user) => {
-//                 return reaction.emoji.name === '👍' && user.id == message.author.id;
-//             };
-            
-//             const collector = msg.createReactionCollector({ filter, time: 15000 });
-            
-//             collector.on('collect', (reaction, user) => {
-//                 console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
-//             });
-            
-//             collector.on('end', collected => {
-//                 console.log(`Collected ${collected.size} items`);
-//         })
-    
-//         });
-//     }    
-//     });
-
 client.login(token);
