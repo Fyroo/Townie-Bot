@@ -3,7 +3,21 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 const { token } = require('./config.json');
 const { MessageActionRow, MessageButton } = require('discord.js');
 
-
+function checkExistingplayers(players, UserId){
+	
+	let exist = false ;
+	for(let i=0;i<players.length;i++)
+	{
+		if(players[i] == UserId)
+		{
+			exist=true;
+		}
+	}
+	return exist ;
+	}
+function addPlayer(players,UserID){
+	players.push(UserID);
+}
 client.once('ready', () => {
 	console.log('Ready!');
 });
@@ -11,7 +25,7 @@ client.once('ready', () => {
 client.on('message', async message => {
 	if (message.author.bot) return;
     A = '0';
-
+	let timeStop=false;
 	if (message.content.match('play'))  {
 		const row = new MessageActionRow()
 			.addComponents(
@@ -22,11 +36,23 @@ client.on('message', async message => {
 			);
 
 		await message.reply({ content: 'Current players:', A , components: [row] });
+		let players = [];
 		
 		client.on('interactionCreate', interaction => {
 			if(interaction.isButton()){
+				if (!checkExistingplayers(players,interaction.user.id))
+				{
+					addPlayer(players,interaction.user.id);
+				console.log(players);
 				console.log(interaction.user.tag);
 				interaction.reply({ content: `${interaction.user.tag} joined`});
+				}else{
+					interaction.reply({ content: `${interaction.user.tag} already joined you can not join twice`});
+				}
+				
+
+				
+				
 				
 			}
 		});           
