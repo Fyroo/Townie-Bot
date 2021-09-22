@@ -46,8 +46,7 @@ client.on('message', async message => {
 	if (message.author.bot) return;
 
 	if (message.content.match('play'))  {
-		
-		const row = new MessageActionRow()
+		var readybtn = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
 					.setCustomId('primary')
@@ -55,15 +54,18 @@ client.on('message', async message => {
 					.setStyle('PRIMARY')
 					.setDisabled(false),
 			);
-let msg = message.reply({ content: 'Current players:',  components: [row] });
-		await msg; 
-		
+		let msg = await message.reply({ content: 'The game will start once enough players joined..',  components: [readybtn] });
 		let players = [];
+		 session = false;
         time(10);//seconds
 		client.on('interactionCreate', interaction => {
 			if (timer) {
-				// message.editreply('balls');
-				return interaction.reply('time over');
+				msg.edit({ content: 'Game timeout has ended!',  components: [] });
+               if(players.length >= 1){
+				   session = true;
+				   return interaction.reply('The game will begin')}  
+			   else return interaction.reply('oops, too late try again!');
+               
 		}
 			else if(interaction.isButton()){
 				
@@ -71,14 +73,23 @@ let msg = message.reply({ content: 'Current players:',  components: [row] });
 				{
 					let player1 = new playerProfile(interaction.user.tag,'test');
 					addPlayer(players,interaction.user.id);
-				console.log(players);
+				// console.log(players);
 				console.log(interaction.user.tag);
-				interaction.reply({ content: `${interaction.user.tag} joined`});
+				interaction.reply({ content: `${interaction.user.username} joined`});
 				}else{
-					interaction.reply({ content: `${interaction.user.tag} already joined you can not join twice`});
+					interaction.reply({ content: `Seems like you already joined ${interaction.user.username},  you can not join twice.`});
 				}		
 			}
+			if(session){
+				console.log(players);
+				
+	
+	
+			   }else console.log('no')
 		});  
+		
+
+
                   
 	}
 
