@@ -8,22 +8,24 @@ class playerProfile {
 	  this.role = role;
 	}
 }
-
-function checkExistingplayers(players, UserId){
+ 
+function checkExistingplayers(players,interaction){
 	
 	let exist = false ;
 	for(let i=0;i<players.length;i++)
 	{
-		if(players[i] == UserId)
+		if(players[i] == interaction.user.id)
 		{
 			exist=true;
 		}
 	}
-	return exist ;
+	if(exist)interaction.reply({ content: `Seems like you already joined ${interaction.user.username},  you can not join twice.`});
+	else {players.push(interaction.user.id);
+		interaction.reply({ content: `${interaction.user.username} joined`});
 }
 
-function addPlayer(players,UserID){
-	players.push(UserID);
+
+	
 }
 
 function time(time){
@@ -35,11 +37,23 @@ function time(time){
 	
 }
 
+function sessionCreate(players,session,replay){
+	if(session){
+		console.log(players);
+		replay = true;
+	   }else console.log('Session not created');
+
+}
+
+let players = [];
+let replay = false;
+let session = false;
 
 client.once('ready', () => {
 	console.log('Ready!');
 });
  
+
 
 
 client.on('message', async message => {
@@ -51,47 +65,26 @@ client.on('message', async message => {
 				new MessageButton()
 					.setCustomId('primary')
 					.setLabel('Join')
-					.setStyle('PRIMARY')
-					.setDisabled(false),
+					.setStyle('PRIMARY'),
 			);
 		let msg = await message.reply({ content: 'The game will start once enough players joined..',  components: [readybtn] });
-		let players = [];
-		 session = false;
+		if (replay)players = [];
         time(10);//seconds
-		client.on('interactionCreate', interaction => {
+		client.on('interactionCreate',  interaction => {
+            checkExistingplayers(players,interaction);
 			if (timer) {
-				msg.edit({ content: 'Game timeout has ended!',  components: [] });
-               if(players.length >= 1){
+				msg.edit({ content: 'Game timedout!',  components: [] });
+			   if(players.length >= 1){
 				   session = true;
-				   return interaction.reply('The game will begin')}  
-			   else return interaction.reply('oops, too late try again!');
-               
-		}
-			else if(interaction.isButton()){
-				
-				if (!checkExistingplayers(players,interaction.user.id))
-				{
-					let player1 = new playerProfile(interaction.user.tag,'test');
-					addPlayer(players,interaction.user.id);
-				// console.log(players);
-				console.log(interaction.user.tag);
-				interaction.reply({ content: `${interaction.user.username} joined`});
-				}else{
-					interaction.reply({ content: `Seems like you already joined ${interaction.user.username},  you can not join twice.`});
-				}		
-			}
-			if(session){
-				console.log(players);
-				
-	
-	
-			   }else console.log('no')
+				   sessionCreate(players,session,replay); 
+				    message.reply('The game will begin');}  
+
+			       else return interaction.reply('Oops, too late try again!');
+		    }; 
 		});  
-		
-
-
-                  
 	}
-
 });
+ 
+
+
 client.login(token);
