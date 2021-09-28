@@ -48,7 +48,10 @@ function sessionCreate(players,session,replay){
 let players = [];
 let replay = false;
 let session = false;
-
+let Town_killing = ['Mafioso','Godfather','Serial Killer','Vigilante'];
+let Town_Investigative = ['Investigator','Lookout'];
+let Town_Protective = ['Doctor'];
+let Town_Support = ['Escort','Medium'];
 client.once('ready', () => {
 	console.log('Ready!');
 });
@@ -80,8 +83,8 @@ client.on('message', async message => {
 				    message.reply('The game will begin');}  
 
 			       else return interaction.reply('Oops, too late try again!');
-		    }; 
-		});  
+		    };
+		});
 	}
 });
  
