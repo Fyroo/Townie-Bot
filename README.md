@@ -1,3 +1,3 @@
 # Townie
-Discord bot
-Concept discord bot for advanced server managment with a built-in game
+
+Concept discord bot for advanced server management with a built-in game
